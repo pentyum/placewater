@@ -1,7 +1,5 @@
 package com.piggest.minecraft.bukkit.placewater;
 
-import java.util.List;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -9,8 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.milkbowl.vault.economy.Economy;
@@ -20,6 +17,7 @@ public class Placewater extends JavaPlugin {
 	private Economy economy = null;
 	private ConfigurationSection price = null;
 	private FileConfiguration config = null;
+	private final UseItemListener item_listener = new UseItemListener(this);
 
 	private boolean initVault() {
 		boolean hasNull = false;
@@ -48,13 +46,16 @@ public class Placewater extends JavaPlugin {
 		} else {
 			getLogger().info("不使用Vault");
 		}
+		
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(item_listener, this);
 
 	}
 	private void fill_water(Location loc){
 		loc.getBlock().breakNaturally();
 		loc.getBlock().setType(Material.WATER);
 	}
-	private void place(Player player, Location loc) {
+	public void place(Player player, Location loc) {
 		String world_name = player.getWorld().getName();
 		int world_price = 0;
 		if (price.getKeys(false).contains(world_name)) {
@@ -122,10 +123,6 @@ public class Placewater extends JavaPlugin {
 		return false;
 	}
 	
-	@EventHandler
-	public void onUsePickaxe(PlayerInteractEvent event) {
-		
-	}
 	/*
 	 * @Override public List<String> onTabComplete(CommandSender sender, Command
 	 * command, String alias, String[] args) {

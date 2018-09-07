@@ -1,6 +1,7 @@
 name: placewater
 main: com.piggest.minecraft.bukkit.placewater.Placewater
-version: 0.0.4
+api-version: 1.13
+version: 0.0.5
 author: Pentyum
 commands:
   placewater:
