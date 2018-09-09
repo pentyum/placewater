@@ -19,12 +19,12 @@ public class UseItemListener implements Listener {
 		if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			if(event.getMaterial() == Material.GOLDEN_PICKAXE){
 				Player player = event.getPlayer();
-				player.sendMessage("你使用了金镐");
 				BlockFace face = event.getBlockFace();
 				Location loc = event.getClickedBlock().getLocation();
 				loc.setX(loc.getX()+face.getModX());
 				loc.setY(loc.getY()+face.getModY());
 				loc.setZ(loc.getZ()+face.getModZ());
+				player.sendMessage("你使用了金镐放水");
 				pw.place(player, loc);
 			}
 		}
