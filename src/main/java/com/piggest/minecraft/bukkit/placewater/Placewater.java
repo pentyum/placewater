@@ -46,19 +46,15 @@ public class Placewater extends JavaPlugin {
 		} else {
 			getLogger().info("不使用Vault");
 		}
-
+		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(item_listener, this);
 
 	}
-
-	private void fill_water(Location loc) {
-		if (loc.getBlock().getType() != Material.END_PORTAL_FRAME) {
-			loc.getBlock().breakNaturally();
-			loc.getBlock().setType(Material.WATER);
-		}
+	private void fill_water(Location loc){
+		loc.getBlock().breakNaturally();
+		loc.getBlock().setType(Material.WATER);
 	}
-
 	public void place(Player player, Location loc) {
 		String world_name = player.getWorld().getName();
 		int world_price = 0;
@@ -126,7 +122,7 @@ public class Placewater extends JavaPlugin {
 		}
 		return false;
 	}
-
+	
 	/*
 	 * @Override public List<String> onTabComplete(CommandSender sender, Command
 	 * command, String alias, String[] args) {
