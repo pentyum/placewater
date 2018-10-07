@@ -1,5 +1,6 @@
 package com.piggest.minecraft.bukkit.placewater;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -7,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,15 +48,17 @@ public class Placewater extends JavaPlugin {
 		} else {
 			getLogger().info("不使用Vault");
 		}
-		
+
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(item_listener, this);
 
 	}
-	private void fill_water(Location loc){
+
+	private void fill_water(Location loc) {
 		loc.getBlock().breakNaturally();
 		loc.getBlock().setType(Material.WATER);
 	}
+
 	public void place(Player player, Location loc) {
 		String world_name = player.getWorld().getName();
 		int world_price = 0;
@@ -63,7 +67,6 @@ public class Placewater extends JavaPlugin {
 		} else {
 			world_price = price.getInt("other");
 		}
-
 		if (use_vault == true) {
 			if (economy.has(player, world_price)) {
 				economy.withdrawPlayer(player, world_price);
@@ -86,7 +89,11 @@ public class Placewater extends JavaPlugin {
 				} else {
 					Player player = (Player) sender;
 					Location loc = player.getLocation();
-					place(player, loc);
+					BlockPlaceEvent place_water_event = new BlockPlaceEvent(loc.getBlock(), loc.getBlock().getState(), null, null, player, true, null);
+					Bukkit.getServer().getPluginManager().callEvent(place_water_event);
+					if (place_water_event.isCancelled() == false) {
+						place(player, loc);
+					}
 				}
 				return true;
 			} else if (args[0].equalsIgnoreCase("setprice")) { // 设置价格
@@ -122,7 +129,7 @@ public class Placewater extends JavaPlugin {
 		}
 		return false;
 	}
-	
+
 	/*
 	 * @Override public List<String> onTabComplete(CommandSender sender, Command
 	 * command, String alias, String[] args) {
