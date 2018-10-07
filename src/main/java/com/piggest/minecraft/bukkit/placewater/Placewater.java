@@ -1,14 +1,10 @@
 package com.piggest.minecraft.bukkit.placewater;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,7 +15,8 @@ public class Placewater extends JavaPlugin {
 	private Economy economy = null;
 	private ConfigurationSection price = null;
 	private FileConfiguration config = null;
-	private final UseItemListener item_listener = new UseItemListener(this);
+	private final UseItem_listener item_listener = new UseItem_listener(this);
+	private final Placewater_listener placewater_listener = new Placewater_listener(this);
 
 	private boolean initVault() {
 		boolean hasNull = false;
@@ -51,15 +48,11 @@ public class Placewater extends JavaPlugin {
 
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(item_listener, this);
+		pm.registerEvents(placewater_listener, this);
 
 	}
 
-	private void fill_water(Location loc) {
-		loc.getBlock().breakNaturally();
-		loc.getBlock().setType(Material.WATER);
-	}
-
-	public void place(Player player, Location loc) {
+	public boolean place_eco(Player player) {
 		String world_name = player.getWorld().getName();
 		int world_price = 0;
 		if (price.getKeys(false).contains(world_name)) {
@@ -67,16 +60,18 @@ public class Placewater extends JavaPlugin {
 		} else {
 			world_price = price.getInt("other");
 		}
+		
 		if (use_vault == true) {
 			if (economy.has(player, world_price)) {
 				economy.withdrawPlayer(player, world_price);
 				player.sendMessage("已扣除" + world_price);
-				fill_water(loc);
+				return true;
 			} else {
 				player.sendMessage("你的金钱不够");
+				return false;
 			}
 		} else {
-			fill_water(loc);
+			return true;
 		}
 	}
 
@@ -87,13 +82,7 @@ public class Placewater extends JavaPlugin {
 				if (!(sender instanceof Player)) { // 如果sender与Player类不匹配
 					sender.sendMessage("这个指令只能让玩家使用。");
 				} else {
-					Player player = (Player) sender;
-					Location loc = player.getLocation();
-					BlockPlaceEvent place_water_event = new BlockPlaceEvent(loc.getBlock(), loc.getBlock().getState(), null, null, player, true, null);
-					Bukkit.getServer().getPluginManager().callEvent(place_water_event);
-					if (place_water_event.isCancelled() == false) {
-						place(player, loc);
-					}
+					sender.sendMessage("使用金镐右键放水");
 				}
 				return true;
 			} else if (args[0].equalsIgnoreCase("setprice")) { // 设置价格

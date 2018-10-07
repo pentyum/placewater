@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.piggest.minecraft</groupId>
 	<artifactId>Placewater</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
