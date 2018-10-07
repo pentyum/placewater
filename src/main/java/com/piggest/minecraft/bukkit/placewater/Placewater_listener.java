@@ -3,6 +3,7 @@ package com.piggest.minecraft.bukkit.placewater;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
@@ -18,13 +19,12 @@ public class Placewater_listener implements Listener {
 		if (event.getBlockPlaced().getType() == Material.WATER
 				&& event.getItemInHand().getType() == Material.GOLDEN_PICKAXE) {
 			if (event.getBlockReplacedState().getType() == Material.END_PORTAL_FRAME) {
-				event.setBuild(false);
-			}
-			if (event.canBuild() == false) {
-				event.getPlayer().sendMessage("不允许在这里放水!");
-				event.getBlockPlaced().setBlockData(event.getBlockReplacedState().getBlockData());
 				event.setCancelled(true);
 			}
+			//if (event.canBuild() == false) {
+			//	event.getPlayer().sendMessage("不允许在这里放水!");
+			//	event.getBlockPlaced().setBlockData(event.getBlockReplacedState().getBlockData());
+			//}
 		}
 	}
 }

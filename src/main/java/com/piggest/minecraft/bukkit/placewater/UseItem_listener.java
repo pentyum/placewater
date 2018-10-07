@@ -37,6 +37,11 @@ public class UseItem_listener implements Listener {
 					BlockPlaceEvent place_water_event = new BlockPlaceEvent(loc.getBlock(), old_state,
 							event.getClickedBlock(), event.getItem(), player, true, event.getHand());
 					Bukkit.getServer().getPluginManager().callEvent(place_water_event);
+					if (place_water_event.isCancelled() == true) {
+						place_water_event.getBlockPlaced()
+								.setBlockData(place_water_event.getBlockReplacedState().getBlockData());
+					}
+					place_water_event.setCancelled(true);
 				}
 			}
 		}
